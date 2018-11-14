@@ -22,7 +22,12 @@ class QuestionsController < ApplicationController
 
     respond_to do |format|
       if @question.save
-        format.html { redirect_to @question, notice: 'Question was successfully created.' }
+        format.html {
+          if params[:quiz_id]
+            @quiz.quiz_id = params[:quiz_id]
+            @quiz.save
+          redirect_to @question, notice: 'Question was successfully created.'
+        }
         format.json { render :show, status: :created, location: @question }
       else
         format.html { render :new }
@@ -59,6 +64,6 @@ class QuestionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def question_params
-      params.require(:question).permit(:question, :quiz_id)
+      params.require(:question).permit(:question)
     end
 end
